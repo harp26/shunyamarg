@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"DM Sans",sans-serif;background:#f5f3ee;padding:1.5rem;min-height:100vh}
+h2{font-family:"Cormorant Garamond",serif;font-size:1.4rem;font-weight:300;color:#1a1916;margin-bottom:0.25rem}
+p.sub{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8c877f;margin-bottom:1.5rem}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#d8d3ca;border:1px solid #d8d3ca;border-radius:4px;overflow:hidden}
+.cell{background:#fff;padding:0.85rem 1rem;min-height:60px}
+.cell.header{background:#1a1916;color:#e8e4db;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;font-weight:400;display:flex;align-items:center}
+.cell.body-header{background:#faf9f6;font-family:"Cormorant Garamond",serif;font-size:1.05rem;font-weight:400;color:#1a1916;display:flex;align-items:flex-start;flex-direction:column;gap:0.2rem}
+.cell.body-header .en{font-size:10px;font-family:"DM Sans",sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:#b8935a}
+.cell.body-header .sub-items{font-size:11px;color:#8c877f;font-family:"DM Sans",sans-serif;margin-top:0.3rem;line-height:1.6}
+.cell.state{font-family:"Cormorant Garamond",serif;font-size:1rem;color:#1a1916;display:flex;flex-direction:column;gap:0.2rem}
+.cell.state .skt{font-size:1.05rem;font-weight:400}
+.cell.state .en{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#b8935a}
+.cell.state .desc{font-size:11px;color:#6a6560;line-height:1.5;margin-top:0.25rem}
+.cell.components{font-size:11px;color:#4a4844;line-height:1.7}
+.cell.components .item{display:flex;align-items:baseline;gap:0.4rem;margin-bottom:0.2rem}
+.cell.components .skt{font-family:"Cormorant Garamond",serif;font-size:0.95rem;color:#1a1916;white-space:nowrap}
+.cell.components .en{color:#8c877f}
+.gold{color:#b8935a}
+.row-label{background:#f4f2ed;font-size:11px;font-weight:400;letter-spacing:0.08em;color:#5a5650;display:flex;align-items:center;border-right:2px solid #b8935a}
+.turiya-row{grid-column:1/-1;background:#1a1916;color:#c9a05a;padding:0.85rem 1rem;font-family:"Cormorant Garamond",serif;font-size:1rem;font-style:italic;text-align:center;letter-spacing:0.04em}
+.legend{display:flex;gap:1.5rem;margin-top:1rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:0.4rem;font-size:11px;color:#8c877f}
+.legend-dot{width:10px;height:10px;border-radius:2px}
+</style>
+</head>
+<body>
+<h2>Tri-Śarīra · The Three Bodies</h2>
+<p class="sub">A reference map — return to this whenever needed</p>
+
+<div class="grid">
+  <!-- Header row -->
+  <div class="cell header">Body</div>
+  <div class="cell header">State of Consciousness</div>
+  <div class="cell header">Components</div>
+
+  <!-- Gross Body -->
+  <div class="cell body-header">
+    <div>स्थूल शरीर</div>
+    <div class="en">Gross Body · Sthūla Śarīra</div>
+    <div class="sub-items">Formed of the 5 great elements (pañca-mahābhūta) after gross combination</div>
+  </div>
+  <div class="cell state">
+    <div class="skt">जाग्रत् अवस्था</div>
+    <div class="en">Waking State</div>
+    <div class="desc">Consciousness identified with the gross body — the waker (विश्व) experiencing the waking world</div>
+  </div>
+  <div class="cell components">
+    <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#b8935a;margin-bottom:0.4rem">5 Sense Organs</div>
+    <div class="item"><span class="skt">श्रोत्र</span><span class="en">Ears (hearing)</span></div>
+    <div class="item"><span class="skt">त्वक्</span><span class="en">Skin (touch)</span></div>
+    <div class="item"><span class="skt">चक्षु</span><span class="en">Eyes (sight)</span></div>
+    <div class="item"><span class="skt">रसना</span><span class="en">Tongue (taste)</span></div>
+    <div class="item"><span class="skt">घ्राण</span><span class="en">Nose (smell)</span></div>
+    <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#b8935a;margin:0.5rem 0 0.4rem">5 Action Organs</div>
+    <div class="item"><span class="skt">वाक्</span><span class="en">Speech</span></div>
+    <div class="item"><span class="skt">पाणि</span><span class="en">Hands</span></div>
+    <div class="item"><span class="skt">पाद</span><span class="en">Feet</span></div>
+    <div class="item"><span class="skt">पायु</span><span class="en">Elimination</span></div>
+    <div class="item"><span class="skt">उपस्थ</span><span class="en">Generation</span></div>
+  </div>
+
+  <!-- Subtle Body -->
+  <div class="cell body-header">
+    <div>सूक्ष्म शरीर</div>
+    <div class="en">Subtle Body · Sūkṣma Śarīra</div>
+    <div class="sub-items">17 components · Purely functional · No fixed form · Vehicle of the jīva across births</div>
+  </div>
+  <div class="cell state">
+    <div class="skt">स्वप्न अवस्था</div>
+    <div class="en">Dreaming State</div>
+    <div class="desc">Consciousness identified with the subtle body — the dreamer (तैजस) creating experience from within</div>
+  </div>
+  <div class="cell components">
+    <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#b8935a;margin-bottom:0.4rem">Antaḥkaraṇa (Inner Instrument)</div>
+    <div class="item"><span class="skt">मनस्</span><span class="en">Doubting mind</span></div>
+    <div class="item"><span class="skt">बुद्धि</span><span class="en">Deciding intellect</span></div>
+    <div class="item"><span class="skt">चित्त</span><span class="en">Memory store</span></div>
+    <div class="item"><span class="skt">अहंकार</span><span class="en">Ego-sense</span></div>
+    <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#b8935a;margin:0.5rem 0 0.4rem">5 Prāṇas (Vital Forces)</div>
+    <div class="item"><span class="skt">प्राण</span><span class="en">In-breath · chest</span></div>
+    <div class="item"><span class="skt">अपान</span><span class="en">Out-breath · lower</span></div>
+    <div class="item"><span class="skt">व्यान</span><span class="en">Circulation</span></div>
+    <div class="item"><span class="skt">उदान</span><span class="en">Upward · throat</span></div>
+    <div class="item"><span class="skt">समान</span><span class="en">Integration · navel</span></div>
+    <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#b8935a;margin:0.5rem 0 0.2rem">+ 5 sense + 5 action organs (subtle form)</div>
+  </div>
+
+  <!-- Causal Body -->
+  <div class="cell body-header">
+    <div>कारण शरीर</div>
+    <div class="en">Causal Body · Kāraṇa Śarīra</div>
+    <div class="sub-items">Seed of the other two · अनादि अविद्या · Dissolves only in liberation</div>
+  </div>
+  <div class="cell state">
+    <div class="skt">सुषुप्ति अवस्था</div>
+    <div class="en">Deep Sleep State</div>
+    <div class="desc">Consciousness identified with the causal body — the deep sleeper (प्राज्ञ) resting in undifferentiated bliss</div>
+  </div>
+  <div class="cell components">
+    <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#b8935a;margin-bottom:0.4rem">Anandamaya Kosha</div>
+    <div class="item"><span class="skt">वासना</span><span class="en">Deep tendencies</span></div>
+    <div class="item"><span class="skt">संस्कार</span><span class="en">Impressions</span></div>
+    <div class="item"><span class="skt">कर्मफल</span><span class="en">Karmic seeds</span></div>
+    <div style="margin-top:0.5rem;font-size:11px;color:#8c877f;line-height:1.6;font-style:italic">All in unmanifest (avyakta) form — the seed that contains the whole tree</div>
+  </div>
+
+  <!-- Turiya row -->
+  <div class="turiya-row">
+    तुरीय — The Fourth · Pure Consciousness · The witness of all three bodies and all three states · This is what we are
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#1a1916"></div>Gross → Waking → Annamaya Kosha</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3a3060"></div>Subtle → Dreaming → Prāṇa · Mano · Vijñānamaya Kosha</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3a2a10"></div>Causal → Deep Sleep → Ānandamaya Kosha</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#b8935a"></div>Turīya → The Self → Beyond all Koshas</div>
+</div>
+</body>
+</html>

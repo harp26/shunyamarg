@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShunyaMarg · Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#faf9f6;--cream2:#f4f2ed;--stone:#e2ddd5;--pebble:#c9c3b8;
+  --muted:#8c877f;--dim:#5a5650;--ink:#1c1b18;--gold:#b8935a;
+  --line:rgba(28,27,24,0.10);--line-md:rgba(28,27,24,0.18);
+  --green:#4a8c6a;--red:#b85a5a;--blue:#5a6eb8;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+}
+body{font-family:var(--sans);background:var(--cream2);color:var(--ink);font-size:14px;line-height:1.6}
+/* ── Login screen ── */
+#loginScreen{
+  position:fixed;inset:0;background:var(--cream);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:1000;
+}
+#loginScreen h1{font-family:var(--serif);font-size:2rem;font-weight:300;margin-bottom:0.5rem}
+#loginScreen p{color:var(--muted);font-size:0.85rem;margin-bottom:2rem}
+.login-box{display:flex;gap:0.75rem}
+.login-box input{
+  padding:0.65rem 1rem;border:1px solid var(--line-md);border-radius:2px;
+  background:white;font-family:var(--sans);font-size:0.9rem;color:var(--ink);
+  outline:none;width:220px;
+}
+.login-box button{
+  padding:0.65rem 1.5rem;background:var(--ink);color:var(--cream);
+  border:none;border-radius:2px;font-family:var(--sans);font-size:12px;
+  letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;
+}
+.login-error{color:var(--red);font-size:12px;margin-top:0.75rem;display:none}
+/* ── Layout ── */
+#app{display:none;min-height:100vh}
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:220px;
+  background:var(--ink);color:var(--cream);
+  display:flex;flex-direction:column;z-index:100;
+}
+.sidebar-logo{
+  padding:1.5rem 1.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.sidebar-logo h2{font-family:var(--serif);font-size:1.2rem;font-weight:300;color:white}
+.sidebar-logo span{font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase}
+.sidebar-nav{flex:1;padding:1rem 0}
+.nav-item{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.7rem 1.5rem;font-size:13px;color:rgba(255,255,255,0.55);
+  cursor:pointer;transition:all 0.2s;border:none;background:none;width:100%;text-align:left;
+}
+.nav-item:hover{color:white;background:rgba(255,255,255,0.05)}
+.nav-item.active{color:white;background:rgba(255,255,255,0.10)}
+.nav-item .icon{font-size:15px;width:18px;text-align:center}
+.sidebar-footer{padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,0.08)}
+.sidebar-footer a{font-size:11px;color:rgba(255,255,255,0.35);text-decoration:none}
+.main{margin-left:220px;padding:2rem 2.5rem;min-height:100vh}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--line);
+}
+.topbar h1{font-family:var(--serif);font-size:1.8rem;font-weight:300}
+/* ── Stat cards ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:white;border:1px solid var(--line);border-radius:2px;padding:1.25rem 1.5rem}
+.stat-card .label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
+.stat-card .value{font-family:var(--serif);font-size:2.2rem;font-weight:300;color:var(--ink);line-height:1}
+.stat-card .sub{font-size:11px;color:var(--muted);margin-top:0.3rem}
+/* ── Table ── */
+.toolbar{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap}
+.toolbar select,.toolbar input{
+  padding:0.5rem 0.75rem;border:1px solid var(--line-md);border-radius:2px;
+  background:white;font-family:var(--sans);font-size:13px;color:var(--ink);outline:none;
+}
+.btn{
+  padding:0.5rem 1.1rem;border-radius:2px;font-family:var(--sans);
+  font-size:12px;letter-spacing:0.06em;text-transform:uppercase;
+  cursor:pointer;border:1px solid var(--line-md);background:white;color:var(--dim);
+  transition:all 0.2s;
+}
+.btn:hover{background:var(--cream2)}
+.btn.primary{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.btn.primary:hover{background:#2e2d29}
+.btn.danger{background:var(--red);color:white;border-color:var(--red)}
+.btn.success{background:var(--green);color:white;border-color:var(--green)}
+.btn.sm{padding:0.3rem 0.7rem;font-size:11px}
+.table-wrap{background:white;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--cream2)}
+th{
+  text-align:left;padding:0.75rem 1rem;
+  font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);
+  border-bottom:1px solid var(--line);font-weight:400;
+}
+td{padding:0.75rem 1rem;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--cream2)}
+.badge{
+  display:inline-block;padding:0.2rem 0.55rem;border-radius:20px;
+  font-size:10px;letter-spacing:0.08em;text-transform:uppercase;
+}
+.badge.published{background:#e8f3ed;color:var(--green)}
+.badge.draft{background:#f3f0e8;color:var(--gold)}
+.badge.pending{background:#f3f0e8;color:var(--gold)}
+.badge.promoted{background:#e8f0f3;color:var(--blue)}
+.badge.rejected{background:#f3e8e8;color:var(--red)}
+.truncate{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ── Modal ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(28,27,24,0.5);
+  z-index:500;display:none;align-items:flex-start;justify-content:center;
+  padding:2rem;overflow-y:auto;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:white;border-radius:2px;width:100%;max-width:700px;
+  padding:2rem;position:relative;margin:auto;
+}
+.modal h2{font-family:var(--serif);font-size:1.5rem;font-weight:300;margin-bottom:1.5rem}
+.modal-close{
+  position:absolute;top:1rem;right:1rem;
+  background:none;border:none;font-size:1.2rem;color:var(--muted);cursor:pointer;
+}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-grid .full{grid-column:1/-1}
+.form-group{display:flex;flex-direction:column;gap:0.35rem}
+label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+input[type=text],input[type=number],select,textarea{
+  padding:0.6rem 0.8rem;border:1px solid var(--line-md);border-radius:2px;
+  background:var(--cream);font-family:var(--sans);font-size:13px;color:var(--ink);
+  outline:none;transition:border-color 0.2s;width:100%;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+textarea{resize:vertical;min-height:140px;line-height:1.7}
+.modal-footer{display:flex;justify-content:flex-end;gap:0.75rem;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--line)}
+/* ── CSV panel ── */
+.csv-panel{background:white;border:1px solid var(--line);border-radius:2px;padding:1.5rem;margin-bottom:1.5rem}
+.csv-panel h3{font-family:var(--serif);font-size:1.2rem;font-weight:300;margin-bottom:0.5rem}
+.csv-panel p{color:var(--muted);font-size:12px;margin-bottom:1rem;line-height:1.6}
+.csv-panel code{background:var(--cream2);padding:0.2rem 0.4rem;border-radius:2px;font-size:11px;color:var(--dim)}
+.csv-panel textarea{min-height:120px;font-family:monospace;font-size:12px}
+/* ── Topic breakdown chart ── */
+.breakdown{background:white;border:1px solid var(--line);border-radius:2px;padding:1.5rem;margin-top:1.5rem}
+.breakdown h3{font-family:var(--serif);font-size:1.1rem;font-weight:300;margin-bottom:1rem}
+.bar-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem}
+.bar-label{font-size:12px;color:var(--dim);width:200px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:6px;background:var(--stone);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;background:var(--gold);border-radius:3px;transition:width 0.6s}
+.bar-count{font-size:12px;color:var(--muted);width:30px;text-align:right}
+/* ── Toast ── */
+#toast{
+  position:fixed;bottom:2rem;right:2rem;z-index:999;
+  background:var(--ink);color:var(--cream);
+  padding:0.75rem 1.25rem;border-radius:2px;
+  font-size:13px;opacity:0;transform:translateY(8px);
+  transition:all 0.3s;pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateY(0)}
+/* ── Empty state ── */
+
+.cb-col{width:36px;text-align:center}
+input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--ink)}
+.bulk-bar{
+  display:none;align-items:center;gap:0.75rem;
+  padding:0.6rem 1rem;background:#fff8e8;
+  border:1px solid #e0c870;border-radius:2px;margin-bottom:0.75rem;
+}
+.bulk-bar.visible{display:flex}
+.bulk-count{font-size:13px;color:var(--dim);flex:1}
+.btn.warn{background:#b85a5a;color:white;border-color:#b85a5a}
+.btn.warn:hover{background:#963a3a}
+
+.empty{text-align:center;padding:3rem;color:var(--muted)}
+.empty p{font-family:var(--serif);font-size:1.1rem;font-style:italic;margin-bottom:0.5rem}
+.panel{display:none}
+.panel.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <h1>ShunyaMarg Admin</h1>
+  <p>Enter the admin password to continue</p>
+  <div class="login-box">
+    <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')login()">
+    <button onclick="login()">Enter →</button>
+  </div>
+  <div class="login-error" id="loginError">Incorrect password. Try again.</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <h2>ShunyaMarg</h2>
+      <span>Admin Panel</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showPanel('dashboard')"><span class="icon">◎</span> Dashboard</button>
+      <button class="nav-item" onclick="showPanel('cards')"><span class="icon">☰</span> Cards</button>
+      <button class="nav-item" onclick="showPanel('import')"><span class="icon">↑</span> Bulk Import</button>
+      <button class="nav-item" onclick="showPanel('submissions')"><span class="icon">✉</span> Submissions</button>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/" target="_blank">← View site</a>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="topbar">
+        <h1>Dashboard</h1>
+        <button class="btn" onclick="loadDashboard()">↻ Refresh</button>
+      </div>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="label">Total Cards</div><div class="value" id="s-total">—</div></div>
+        <div class="stat-card"><div class="label">Published</div><div class="value" id="s-pub">—</div></div>
+        <div class="stat-card"><div class="label">Drafts</div><div class="value" id="s-draft">—</div></div>
+        <div class="stat-card"><div class="label">Pending Reviews</div><div class="value" id="s-pending">—</div><div class="sub">from community</div></div>
+      </div>
+      <div class="breakdown">
+        <h3>Cards by topic</h3>
+        <div id="topicBreakdown"></div>
+      </div>
+    </div>
+
+    <!-- CARDS -->
+    <div class="panel" id="panel-cards">
+      <div class="topbar">
+        <h1>Knowledge Cards</h1>
+        <button class="btn primary" onclick="openCardModal()">+ New Card</button>
+      </div>
+      <div class="toolbar">
+        <select id="filterTopic" onchange="loadCards()">
+          <option value="">All topics</option>
+        </select>
+        <select id="filterStatus" onchange="loadCards()">
+          <option value="">All statuses</option>
+          <option value="published">Published</option>
+          <option value="draft">Draft</option>
+        </select>
+        <input type="text" id="searchCards" placeholder="Search title..." oninput="loadCards()" style="width:200px">
+      </div>
+      <div class="bulk-bar" id="bulkBar">
+        <span class="bulk-count" id="bulkCount">0 selected</span>
+        <button class="btn warn sm" onclick="bulkDelete()">🗑 Delete selected</button>
+        <button class="btn sm" onclick="bulkDownloadCSV()">↓ Download as CSV</button>
+        <button class="btn sm" onclick="clearSelection()">✕ Clear</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="cb-col"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th>
+              <th>ID</th><th>Title</th><th>Topic</th><th>Tag</th>
+              <th>Read time</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="cardsBody">
+            <tr><td colspan="7" class="empty"><p>Loading cards...</p></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BULK IMPORT -->
+    <div class="panel" id="panel-import">
+      <div class="topbar">
+        <h1>Bulk Import</h1>
+      </div>
+      <div class="csv-panel">
+        <h3>Import cards via CSV</h3>
+        <p>
+          Required columns: <code>topic_slug</code>, <code>title</code>, <code>content</code>&nbsp;&nbsp;
+          Optional: <code>tag</code>, <code>read_time</code>, <code>status</code>, <code>sort_order</code>, <code>content_traditional</code>, <code>content_contemporary</code>, <code>content_katha</code>
+        </p>
+
+        <!-- Method 1: File upload (recommended) -->
+        <div style="margin:1rem 0;padding:1rem;background:var(--cream2);border-radius:2px;border:1px solid var(--line)">
+          <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);margin-bottom:0.6rem">
+            ✓ Recommended — Upload CSV file directly (avoids encoding issues)
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+            <input type="file" id="csvFileInput" accept=".csv" onchange="loadCSVFile(this)"
+              style="font-size:13px;color:var(--muted)">
+            <span id="fileStatus" style="font-size:12px;color:var(--green)"></span>
+          </div>
+          <div style="margin-top:0.75rem;display:flex;gap:0.75rem;align-items:center">
+            <button class="btn primary" onclick="importCSV()">Import →</button>
+            <button class="btn" onclick="downloadTemplate()">↓ Download Template</button>
+            <span id="importResult" style="font-size:13px;color:var(--green)"></span>
+          </div>
+        </div>
+
+        <!-- Method 2: Paste -->
+        <div style="margin-top:1rem">
+          <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem">
+            Or paste CSV text (may have encoding issues with Sanskrit/Devanagari)
+          </div>
+          <textarea id="csvInput" placeholder="topic_slug,title,content,tag,read_time,status&#10;tattvabodh,Card Title,Card content here...,Tag,4 min read,published" style="min-height:80px;font-family:monospace;font-size:12px"></textarea>
+        </div>
+      </div>
+
+      <div class="csv-panel" style="margin-top:1.5rem">
+        <h3>How to import the ShunyaMarg CSV files</h3>
+        <p>
+          1. Download the CSV file from Claude (e.g. <em>tattvabodh_section6.csv</em>)<br>
+          2. Click <strong>Choose File</strong> above and select the downloaded CSV<br>
+          3. Click <strong>Import →</strong><br>
+          4. Cards appear in the Cards panel — check status and sort order<br><br>
+          <strong>Note:</strong> File upload handles Sanskrit, Devanagari and special characters correctly.
+          Paste method may corrupt these characters — use file upload for ShunyaMarg content.
+        </p>
+      </div>
+    </div>
+
+    <!-- SUBMISSIONS -->
+    <div class="panel" id="panel-submissions">
+      <div class="topbar">
+        <h1>Community Submissions</h1>
+        <div style="display:flex;gap:0.5rem">
+          <select id="filterSubType" onchange="loadSubmissions()">
+            <option value="">All types</option>
+            <option value="query">Queries</option>
+            <option value="contribution">Contributions</option>
+          </select>
+          <select id="filterSubStatus" onchange="loadSubmissions()">
+            <option value="">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="promoted">Promoted</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Type</th><th>Name / Email</th><th>Content</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="submissionsBody">
+            <tr><td colspan="6" class="empty"><p>Loading submissions...</p></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- CARD MODAL -->
+<div class="modal-overlay" id="cardModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('cardModal')">✕</button>
+    <h2 id="modalTitle">New Card</h2>
+    <input type="hidden" id="cardId">
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Topic *</label>
+        <select id="f-topic"></select>
+      </div>
+      <div class="form-group full">
+        <label>Card Title / Question *</label>
+        <input type="text" id="f-title" placeholder="What is...?">
+      </div>
+      <div class="form-group full">
+        <label>Content (fallback / shared) *</label>
+        <textarea id="f-content" style="min-height:100px;" placeholder="Used when a specific voice version is not provided..."></textarea>
+      </div>
+      <div class="form-group full" style="border-top:1px solid var(--line);padding-top:1rem;margin-top:0.25rem">
+        <label style="color:var(--blue);letter-spacing:0.1em">Traditional Voice</label>
+        <textarea id="f-content-trad" style="min-height:120px;" placeholder="Content for Traditional readers (Sanskrit terms first, scholarly)..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label style="color:var(--green);letter-spacing:0.1em">Contemporary Voice</label>
+        <textarea id="f-content-cont" style="min-height:120px;" placeholder="Content for Contemporary readers (lived experience first, meditative)..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label style="color:var(--gold);letter-spacing:0.1em">Katha Voice</label>
+        <textarea id="f-content-kath" style="min-height:120px;" placeholder="Content for Katha readers (story, metaphor, children-friendly)..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Tag (category label on card)</label>
+        <input type="text" id="f-tag" placeholder="e.g. TattvaBodh">
+      </div>
+      <div class="form-group">
+        <label>Read Time</label>
+        <input type="text" id="f-time" placeholder="4 min read" value="4 min read">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="f-status">
+          <option value="published">Published</option>
+          <option value="draft">Draft</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Sort Order</label>
+        <input type="number" id="f-order" value="0" min="0">
+      </div>
+      <div class="form-group full">
+        <label>Image URL (optional)</label>
+        <input type="text" id="f-image" placeholder="https://...">
+      </div>
+      <div class="form-group full">
+        <label>Misc / Notes (internal only)</label>
+        <input type="text" id="f-misc" placeholder="Internal notes...">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('cardModal')">Cancel</button>
+      <button class="btn primary" onclick="saveCard()">Save Card →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMISSION DETAIL MODAL -->
+<div class="modal-overlay" id="subModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('subModal')">✕</button>
+    <h2 id="subModalTitle">Submission</h2>
+    <div id="subModalContent"></div>
+    <div class="modal-footer" id="subModalFooter"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+const API = '';
+let PASSWORD = '';
+let TOPICS_FLAT = [];
+let currentCards = [];
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+function login() {
+  const pw = document.getElementById('pwInput').value;
+  fetch(`${API}/api/admin/stats`, { headers: {'x-admin-password': pw} })
+    .then(r => {
+      if (r.ok) {
+        PASSWORD = pw;
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        init();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }).catch(() => {
+      document.getElementById('loginError').textContent = 'Cannot connect to server. Is it running?';
+      document.getElementById('loginError').style.display = 'block';
+    });
+}
+
+function authHeaders() {
+  return { 'Content-Type': 'application/json', 'x-admin-password': PASSWORD };
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init() {
+  await loadTopics();
+  loadDashboard();
+}
+
+async function loadTopics() {
+  const res = await fetch(`${API}/api/topics`);
+  const tree = await res.json();
+  TOPICS_FLAT = [];
+  tree.forEach(p => {
+    TOPICS_FLAT.push(p);
+    if (p.children) p.children.forEach(c => TOPICS_FLAT.push(c));
+  });
+
+  // Populate topic filters
+  const filterSel = document.getElementById('filterTopic');
+  const formSel = document.getElementById('f-topic');
+  TOPICS_FLAT.forEach(t => {
+    const opt = new Option(t.parent ? '  └ ' + t.label : t.label, t.slug);
+    filterSel.add(opt.cloneNode(true));
+    if (t.parent) formSel.add(opt);
+  });
+}
+
+// ── Panels ────────────────────────────────────────────────────────────────────
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(b => {
+    if (b.textContent.toLowerCase().includes(name.substring(0,4))) b.classList.add('active');
+  });
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'cards') loadCards();
+  if (name === 'submissions') loadSubmissions();
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+async function loadDashboard() {
+  const res = await fetch(`${API}/api/admin/stats`, { headers: authHeaders() });
+  const d = await res.json();
+  document.getElementById('s-total').textContent = d.totalCards;
+  document.getElementById('s-pub').textContent = d.published;
+  document.getElementById('s-draft').textContent = d.drafts;
+  document.getElementById('s-pending').textContent = d.pendingSubs;
+
+  const max = Math.max(...d.byTopic.map(t => t.count), 1);
+  document.getElementById('topicBreakdown').innerHTML = d.byTopic.length
+    ? d.byTopic.map(t => `
+        <div class="bar-row">
+          <div class="bar-label">${t.label}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(t.count/max*100)}%"></div></div>
+          <div class="bar-count">${t.count}</div>
+        </div>`).join('')
+    : '<p style="color:var(--muted);font-size:13px">No cards yet. Add some in the Cards panel.</p>';
+}
+
+// ── Cards ─────────────────────────────────────────────────────────────────────
+async function loadCards() {
+  const topic = document.getElementById('filterTopic').value;
+  const status = document.getElementById('filterStatus').value;
+  const search = document.getElementById('searchCards').value.toLowerCase();
+  let url = `${API}/api/admin/cards?`;
+  if (topic) url += `topic=${topic}&`;
+  if (status) url += `status=${status}&`;
+  const res = await fetch(url, { headers: authHeaders() });
+  let cards = await res.json();
+  if (search) cards = cards.filter(c => c.title.toLowerCase().includes(search));
+  currentCards = cards;
+
+  const tbody = document.getElementById('cardsBody');
+  if (!cards.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty"><p>No cards found.</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = cards.map(c => `
+    <tr id="row-${c.id}">
+      <td class="cb-col"><input type="checkbox" class="row-cb" data-id="${c.id}" onchange="updateBulkBar()"></td>
+      <td style="color:var(--muted);font-size:12px">#${c.id}</td>
+      <td><div class="truncate" title="${esc(c.title)}">${esc(c.title)}</div></td>
+      <td style="font-size:12px;color:var(--dim)">${esc(c.topic_label||c.topic_slug)}</td>
+      <td style="font-size:12px;color:var(--muted)">${esc(c.tag||'—')}</td>
+      <td style="font-size:12px;color:var(--muted)">${esc(c.read_time||'—')}</td>
+      <td><span class="badge ${c.status}">${c.status}</span></td>
+      <td>
+        <div style="display:flex;gap:0.4rem">
+          <button class="btn sm" onclick="editCard(${c.id})">Edit</button>
+          <button class="btn sm danger" onclick="deleteCard(${c.id}, '${esc(c.title).substring(0,30)}')">Del</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function openCardModal(card) {
+  document.getElementById('modalTitle').textContent = card ? 'Edit Card' : 'New Card';
+  document.getElementById('cardId').value = card ? card.id : '';
+  document.getElementById('f-topic').value = card ? card.topic_slug : '';
+  document.getElementById('f-title').value = card ? card.title : '';
+  document.getElementById('f-content').value = card ? card.content : '';
+  document.getElementById('f-content-trad').value = card ? (card.content_traditional||'') : '';
+  document.getElementById('f-content-cont').value = card ? (card.content_contemporary||'') : '';
+  document.getElementById('f-content-kath').value = card ? (card.content_katha||'') : '';
+  document.getElementById('f-tag').value = card ? (card.tag||'') : '';
+  document.getElementById('f-time').value = card ? (card.read_time||'4 min read') : '4 min read';
+  document.getElementById('f-status').value = card ? card.status : 'published';
+  document.getElementById('f-order').value = card ? (card.sort_order||0) : 0;
+  document.getElementById('f-image').value = card ? (card.image_url||'') : '';
+  document.getElementById('f-misc').value = card ? (card.misc||'') : '';
+  document.getElementById('cardModal').classList.add('open');
+}
+
+async function editCard(id) {
+  const card = currentCards.find(c => c.id === id);
+  if (card) openCardModal(card);
+}
+
+async function saveCard() {
+  const id = document.getElementById('cardId').value;
+  const body = {
+    topic_slug: document.getElementById('f-topic').value,
+    title: document.getElementById('f-title').value,
+    content: document.getElementById('f-content').value,
+    content_traditional: document.getElementById('f-content-trad').value || null,
+    content_contemporary: document.getElementById('f-content-cont').value || null,
+    content_katha: document.getElementById('f-content-kath').value || null,
+    tag: document.getElementById('f-tag').value,
+    read_time: document.getElementById('f-time').value,
+    status: document.getElementById('f-status').value,
+    sort_order: parseInt(document.getElementById('f-order').value)||0,
+    image_url: document.getElementById('f-image').value,
+    misc: document.getElementById('f-misc').value,
+  };
+  if (!body.topic_slug || !body.title || !body.content) {
+    toast('Topic, title and content are required', true); return;
+  }
+  const method = id ? 'PUT' : 'POST';
+  const url = id ? `${API}/api/admin/cards/${id}` : `${API}/api/admin/cards`;
+  const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
+  const d = await res.json();
+  if (d.ok) {
+    toast(id ? 'Card updated' : `Card created (ID: ${d.id})`);
+    closeModal('cardModal');
+    loadCards();
+    loadDashboard();
+  } else toast('Error: ' + d.error, true);
+}
+
+async function deleteCard(id, name) {
+  if (!confirm(`Delete card "${name}..."?`)) return;
+  await fetch(`${API}/api/admin/cards/${id}`, { method:'DELETE', headers: authHeaders() });
+  toast('Card deleted');
+  loadCards();
+  loadDashboard();
+}
+
+// ── Bulk Import ───────────────────────────────────────────────────────────────
+function loadCSVFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById('csvInput').value = e.target.result;
+    document.getElementById('fileStatus').textContent = `✓ ${file.name} loaded (${(file.size/1024).toFixed(1)} KB)`;
+  };
+  reader.onerror = () => toast('Could not read file', true);
+  reader.readAsText(file, 'UTF-8');
+}
+
+async function importCSV() {
+  const csv_data = document.getElementById('csvInput').value.trim();
+  if (!csv_data) { toast('Upload a CSV file or paste CSV data first', true); return; }
+  const res = await fetch(`${API}/api/admin/import`, {
+    method: 'POST', headers: authHeaders(), body: JSON.stringify({ csv_data })
+  });
+  const d = await res.json();
+  if (d.ok) {
+    document.getElementById('importResult').textContent = `✓ ${d.imported} cards imported`;
+    toast(`${d.imported} cards imported successfully`);
+    document.getElementById('csvInput').value = '';
+  } else {
+    document.getElementById('importResult').textContent = '';
+    toast('Import error: ' + d.error, true);
+  }
+}
+
+function downloadTemplate() {
+  const csv = `topic_slug,title,content,tag,read_time,status,sort_order
+tattvabodh,What is TattvaBodh?,TattvaBodh is a foundational text of Advaita Vedanta...,TattvaBodh,4 min read,published,1
+upanishads,The teaching of the Upanishads,The Upanishads form the concluding portion of the Vedas...,Upanishads,5 min read,published,1`;
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'shunyamarg_cards_template.csv';
+  a.click();
+}
+
+// ── Submissions ───────────────────────────────────────────────────────────────
+async function loadSubmissions() {
+  const type = document.getElementById('filterSubType').value;
+  const status = document.getElementById('filterSubStatus').value;
+  let url = `${API}/api/admin/submissions?`;
+  if (type) url += `type=${type}&`;
+  if (status) url += `status=${status}&`;
+  const res = await fetch(url, { headers: authHeaders() });
+  const subs = await res.json();
+  const tbody = document.getElementById('submissionsBody');
+  if (!subs.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><p>No submissions yet.</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = subs.map(s => `
+    <tr>
+      <td style="font-size:12px;color:var(--muted);white-space:nowrap">${s.created_at.split(' ')[0]}</td>
+      <td><span class="badge ${s.type==='query'?'draft':'pending'}">${s.type}</span></td>
+      <td style="font-size:12px">
+        <div>${esc(s.name||'—')}</div>
+        <div style="color:var(--muted)">${esc(s.email||'—')}</div>
+      </td>
+      <td><div class="truncate" style="max-width:200px" title="${esc(s.content)}">${esc(s.content)}</div></td>
+      <td><span class="badge ${s.status}">${s.status}</span></td>
+      <td>
+        <div style="display:flex;gap:0.4rem">
+          <button class="btn sm" onclick="viewSubmission(${s.id})">View</button>
+          ${s.status==='pending' && s.type==='contribution' ? `<button class="btn sm success" onclick="promoteSubmission(${s.id})">→ Card</button>` : ''}
+          ${s.status==='pending' ? `<button class="btn sm danger" onclick="rejectSubmission(${s.id})">Reject</button>` : ''}
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+let subCache = [];
+async function viewSubmission(id) {
+  const url = `${API}/api/admin/submissions?`;
+  const res = await fetch(url, { headers: authHeaders() });
+  const all = await res.json();
+  const s = all.find(x => x.id === id);
+  if (!s) return;
+  subCache[id] = s;
+
+  document.getElementById('subModalTitle').textContent = s.type === 'query' ? 'Community Query' : 'Card Contribution';
+  document.getElementById('subModalContent').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+      <div><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem">From</div>
+        <div>${esc(s.name||'—')} · ${esc(s.email||'—')}</div></div>
+      <div><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem">Date</div>
+        <div>${s.created_at}</div></div>
+      ${s.card_title ? `<div class="full"><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem">Card Title</div><div>${esc(s.card_title)}</div></div>` : ''}
+      ${s.pillar ? `<div><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem">Pillar</div><div>${esc(s.pillar)}</div></div>` : ''}
+    </div>
+    <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem">Content</div>
+    <div style="background:var(--cream2);padding:1rem;border-radius:2px;line-height:1.75;font-size:13px">${esc(s.content).replace(/\n/g,'<br>')}</div>
+    <div style="margin-top:1rem"><span class="badge ${s.status}">${s.status}</span></div>
+  `;
+  const footer = document.getElementById('subModalFooter');
+  footer.innerHTML = `<button class="btn" onclick="closeModal('subModal')">Close</button>`;
+  if (s.status === 'pending' && s.type === 'contribution') {
+    footer.innerHTML += `<button class="btn success" onclick="promoteSubmission(${s.id});closeModal('subModal')">Promote to Card Draft →</button>`;
+  }
+  if (s.status === 'pending') {
+    footer.innerHTML += `<button class="btn danger" onclick="rejectSubmission(${s.id});closeModal('subModal')">Reject</button>`;
+  }
+  document.getElementById('subModal').classList.add('open');
+}
+
+async function promoteSubmission(id) {
+  const topic = prompt('Which topic slug for this card? (e.g. contemplation, meditation, stories)') || 'contemplation';
+  const res = await fetch(`${API}/api/admin/submissions/${id}/promote`, {
+    method:'POST', headers:authHeaders(), body: JSON.stringify({topic_slug:topic})
+  });
+  const d = await res.json();
+  if (d.ok) { toast(`Card draft created (ID: ${d.card_id})`); loadSubmissions(); }
+  else toast('Error: ' + d.error, true);
+}
+
+async function rejectSubmission(id) {
+  if (!confirm('Mark this submission as rejected?')) return;
+  await fetch(`${API}/api/admin/submissions/${id}`, {
+    method:'PUT', headers:authHeaders(), body: JSON.stringify({status:'rejected'})
+  });
+  toast('Submission rejected');
+  loadSubmissions();
+}
+
+// ── Utils ─────────────────────────────────────────────────────────────────────
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg, err) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = err ? 'var(--red)' : 'var(--ink)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+
+// ── Bulk selection ────────────────────────────────────────────────────────────
+function getSelectedIds() {
+  return Array.from(document.querySelectorAll('.row-cb:checked')).map(cb => parseInt(cb.dataset.id));
+}
+function updateBulkBar() {
+  const ids = getSelectedIds();
+  const bar = document.getElementById('bulkBar');
+  const count = document.getElementById('bulkCount');
+  bar.classList.toggle('visible', ids.length > 0);
+  count.textContent = ids.length + ' card' + (ids.length !== 1 ? 's' : '') + ' selected';
+}
+function toggleSelectAll(cb) {
+  document.querySelectorAll('.row-cb').forEach(c => c.checked = cb.checked);
+  updateBulkBar();
+}
+function clearSelection() {
+  document.querySelectorAll('.row-cb').forEach(c => c.checked = false);
+  const sa = document.getElementById('selectAll');
+  if (sa) sa.checked = false;
+  updateBulkBar();
+}
+async function bulkDelete() {
+  const ids = getSelectedIds();
+  if (!ids.length) return;
+  if (!confirm(`Delete ${ids.length} card(s)? This cannot be undone.`)) return;
+  for (const id of ids) {
+    await fetch(`${API}/api/admin/cards/${id}`, { method:'DELETE', headers: authHeaders() });
+  }
+  toast(`${ids.length} card(s) deleted`);
+  clearSelection();
+  loadCards();
+  loadDashboard();
+}
+function bulkDownloadCSV() {
+  const ids = getSelectedIds();
+  if (!ids.length) { toast('Select cards first', true); return; }
+  const selected = currentCards.filter(c => ids.includes(c.id));
+  const headers = ['id','topic_slug','tag','title','content','content_traditional','content_contemporary','content_katha','read_time','status','sort_order','image_url','misc'];
+  const rows = selected.map(c =>
+    headers.map(h => {
+      const v = c[h] == null ? '' : String(c[h]);
+      return v.includes(',') || v.includes('"') || v.includes('\n') ? `"${v.replace(/"/g,'""')}"` : v;
+    }).join(',')
+  );
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type:'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `shunyamarg_cards_${Date.now()}.csv`;
+  a.click();
+  toast(`${selected.length} card(s) downloaded`);
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
