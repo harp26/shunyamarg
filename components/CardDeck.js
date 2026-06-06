@@ -334,8 +334,6 @@ export default function CardDeck() {
               <span className="text-xs text-stone-500">Retrieving deck details...</span>
             </div>
           ) : showSectionNav && currentTopic === 'tattvabodh' ? (
-            
-            {/* TattvaBodh Navigator Panel */}
             <div className="bg-white border border-[#d8d3ca] p-6 md:p-8 rounded-md shadow-sm">
               <h3 className="font-serif text-xl font-normal text-stone-900 mb-1">
                 TattvaBodh Chapters
@@ -392,8 +390,6 @@ export default function CardDeck() {
               )}
             </div>
           ) : (
-            
-            {/* Standard Interactive Quote card */}
             <div className="flex flex-col">
               
               {/* Voice Tabs switcher */}
