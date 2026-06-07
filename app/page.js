@@ -5,12 +5,12 @@ import Link from 'next/link';
 const styles = {
   section: { padding: '48px 20px' },
   inner: { maxWidth: 800, margin: '0 auto' },
-  eyebrow: { fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase' as const, color: '#c9a05a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 } as React.CSSProperties,
+  eyebrow: { fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#c9a05a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 },
   eyebrowLine: { display: 'inline-block', width: 20, height: 1, background: '#c9a05a', opacity: 0.6 },
-  sectionTitle: { fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: 'clamp(1.8rem,4.5vw,2.8rem)', fontWeight: 300, lineHeight: 1.12 } as React.CSSProperties,
-  bodyText: { fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1rem', fontWeight: 300, color: '#6a6560', lineHeight: 1.9, marginBottom: 16 } as React.CSSProperties,
-  goldBtn: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 24px', width: '100%', background: '#c9a05a', color: '#0e0d0b', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' as const, textDecoration: 'none', borderRadius: 2, fontWeight: 400 } as React.CSSProperties,
-  ghostLink: { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7670', textDecoration: 'none' } as React.CSSProperties,
+  sectionTitle: { fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: 'clamp(1.8rem,4.5vw,2.8rem)', fontWeight: 300, lineHeight: 1.12 },
+  bodyText: { fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1rem', fontWeight: 300, color: '#6a6560', lineHeight: 1.9, marginBottom: 16 },
+  goldBtn: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 24px', width: '100%', background: '#c9a05a', color: '#0e0d0b', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: 2, fontWeight: 400 },
+  ghostLink: { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#7a7670', textDecoration: 'none' },
   divider: { border: 'none', borderTop: '1px solid rgba(201,160,90,0.15)', margin: 0 },
 };
 
