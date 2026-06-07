@@ -1,156 +1,205 @@
-﻿'use client';
+'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+const styles = {
+  section: { padding: '48px 20px' },
+  inner: { maxWidth: 800, margin: '0 auto' },
+  eyebrow: { fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase' as const, color: '#c9a05a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 } as React.CSSProperties,
+  eyebrowLine: { display: 'inline-block', width: 20, height: 1, background: '#c9a05a', opacity: 0.6 },
+  sectionTitle: { fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: 'clamp(1.8rem,4.5vw,2.8rem)', fontWeight: 300, lineHeight: 1.12 } as React.CSSProperties,
+  bodyText: { fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1rem', fontWeight: 300, color: '#6a6560', lineHeight: 1.9, marginBottom: 16 } as React.CSSProperties,
+  goldBtn: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 24px', width: '100%', background: '#c9a05a', color: '#0e0d0b', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' as const, textDecoration: 'none', borderRadius: 2, fontWeight: 400 } as React.CSSProperties,
+  ghostLink: { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7670', textDecoration: 'none' } as React.CSSProperties,
+  divider: { border: 'none', borderTop: '1px solid rgba(201,160,90,0.15)', margin: 0 },
+};
+
+const PILLARS = [
+  { num: '01', sans: 'Shunya Chitta · शून्य चित्त', eng: 'Empty Mind', desc: 'When the restless stream of thoughts settles into stillness, the mind dissolves into Shunya. Chitta is not suppressed — it is stilled, like a lake when wind ceases. In that stillness, pure awareness shines.' },
+  { num: '02', sans: 'Shunya Bheda · शून्य भेद', eng: 'Empty Division', desc: 'The experiencer, the experienced, and the experience lose their separateness — all become one in Shunya. The line between self and world, drawn so firmly by the mind, is seen for what it is: a useful fiction.' },
+  { num: '03', sans: 'Shunya Aasakti · शून्य आसक्ति', eng: 'Empty Attachment', desc: 'From possessions to attachments, from wealth to relationships — the clinging fades away, revealing the lightness of Shunya. Nothing is abandoned; instead, everything is held lightly, with an open hand.' },
+  { num: '04', sans: 'Shunya Vani · शून्य वाणी', eng: 'Empty Speech', desc: 'Words give way to silence, arguments dissolve, and truth is expressed in the quiet depth of Shunya. Every word spoken from stillness carries more weight than a thousand spoken from agitation.' },
+  { num: '05', sans: 'Shunya Kaal · शून्य काल', eng: 'Empty Time', desc: 'Past and future vanish, journey and destination merge — all that remains is the timeless now of Shunya. The present moment is not a stepping stone to some future arrival; it is itself the destination.' }
+];
+
 export default function HomePage() {
-  const [s, setS] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    const h = () => setS(window.scrollY > 20);
+    const h = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', h);
     h();
     return () => window.removeEventListener('scroll', h);
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0e0d0b] text-[#e8e4db] font-sans overflow-x-hidden">
+    <div style={{ minHeight: '100vh', background: '#0e0d0b', color: '#e8e4db', fontFamily: "'DM Sans', system-ui, sans-serif", overflowX: 'hidden', lineHeight: 1.7 }}>
       {/* NAV */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 h-[60px]" style={{background:'rgba(14,13,11,0.85)',backdropFilter:'blur(16px)',borderBottom:s?'1px solid rgba(201,160,90,0.15)':'1px solid transparent'}}>
-        <Link href="/" className="flex items-center gap-2 no-underline">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#c9a05a] to-[#7a5e2a] flex items-center justify-center text-[10px] font-bold text-[#0e0d0b]">Ś</div>
-          <span className="font-serif text-[1.1rem] text-[#c9a05a] tracking-wider">ShunyaMarg</span>
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, height: 56,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 16px', background: 'rgba(14,13,11,0.85)', backdropFilter: 'blur(16px)',
+        borderBottom: scrolled ? '1px solid rgba(201,160,90,0.15)' : '1px solid transparent',
+        transition: 'border-color 0.3s'
+      }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+          <img src="/shunyamarg-logo.jpg" alt="ShunyaMarg" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', opacity: 0.9 }} />
+          <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1rem', fontWeight: 400, color: '#c9a05a', letterSpacing: '0.08em' }}>ShunyaMarg</span>
         </Link>
-        <div className="hidden md:flex items-center gap-10">
-          <a href="#about" className="text-[11px] tracking-[0.14em] uppercase text-[#b0aba2] no-underline hover:text-[#c9a05a]">About</a>
-          <Link href="/deck" className="text-[11px] tracking-[0.14em] uppercase text-[#b0aba2] no-underline hover:text-[#c9a05a]">Gyaan Kosh</Link>
-          <a href="#sangha" className="px-4 py-1.5 border border-[rgba(201,160,90,0.15)] rounded-full text-[11px] tracking-[0.14em] uppercase text-[#c9a05a] no-underline hover:bg-[#c9a05a] hover:text-[#0e0d0b]">Sangha</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <Link href="/deck" style={{ fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#b0aba2', textDecoration: 'none' }}>Gyaan Kosh</Link>
+          <a href="#sangha" style={{ padding: '4px 12px', border: '1px solid rgba(201,160,90,0.15)', borderRadius: 20, fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#c9a05a', textDecoration: 'none' }}>Sangha</a>
         </div>
       </nav>
 
       {/* HERO */}
-      <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 md:px-12 py-24 relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px]" style={{background:'radial-gradient(ellipse,rgba(201,160,90,0.07) 0%,transparent 70%)'}} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="absolute rounded-full border border-[rgba(201,160,90,0.12)] w-[420px] h-[420px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-[breathe_8s_ease-in-out_infinite]" />
-          <div className="absolute rounded-full border border-[rgba(201,160,90,0.07)] w-[580px] h-[580px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-[breathe_8s_ease-in-out_infinite_2s]" />
-          <div className="absolute rounded-full border border-[rgba(201,160,90,0.04)] w-[740px] h-[740px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-[breathe_8s_ease-in-out_infinite_4s]" />
+      <section id="hero" style={{
+        minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center',
+        justifyContent: 'center', textAlign: 'center', padding: '80px 20px 40px', position: 'relative', overflow: 'hidden'
+      }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, pointerEvents: 'none', background: 'radial-gradient(ellipse, rgba(201,160,90,0.07) 0%, transparent 70%)' }} />
+        
+        <div style={{ position: 'relative', zIndex: 1, width: 100, height: 100, margin: '0 auto 24px' }}>
+          <img src="/shunyamarg-logo.jpg" alt="ShunyaMarg" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 40px rgba(201,160,90,0.2), 0 0 80px rgba(201,160,90,0.08)' }} />
+          <div style={{ position: 'absolute', inset: -6, borderRadius: '50%', border: '1px solid rgba(201,160,90,0.35)', animation: 'spin-slow 20s linear infinite' }} />
         </div>
 
-        <div className="relative z-10 w-[110px] h-[110px] mx-auto mb-10">
-          <div className="w-full h-full rounded-full bg-gradient-to-br from-[#c9a05a]/20 to-[#7a5e2a]/10 flex items-center justify-center text-4xl font-serif text-[#c9a05a]" style={{boxShadow:'0 0 40px rgba(201,160,90,0.2),0 0 80px rgba(201,160,90,0.08)'}}>ॐ</div>
-          <div className="absolute -inset-[6px] rounded-full border border-[rgba(201,160,90,0.35)] animate-[spin-slow_20s_linear_infinite]" />
+        <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <span style={{ display: 'inline-block', width: 24, height: 1, background: '#c9a05a', opacity: 0.5 }} />
+          <span style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#c9a05a' }}>A philosophical path</span>
+          <span style={{ display: 'inline-block', width: 24, height: 1, background: '#c9a05a', opacity: 0.5 }} />
         </div>
 
-        <div className="relative z-10 flex items-center gap-4 mb-6">
-          <span className="block w-8 h-[1px] bg-[#c9a05a] opacity-50" />
-          <span className="text-[11px] tracking-[0.22em] uppercase text-[#c9a05a]">The Path of Dissolution</span>
-          <span className="block w-8 h-[1px] bg-[#c9a05a] opacity-50" />
-        </div>
-
-        <h1 className="relative z-10 font-serif text-[clamp(3rem,8vw,6.5rem)] font-light leading-[1.05] text-[#e8e4db] tracking-[-0.01em]">
-          <span className="block">ShunyaMarg</span>
-          <span className="block italic text-[#c9a05a] text-[0.75em]">The Path of Dissolution</span>
+        <h1 style={{ position: 'relative', zIndex: 1, fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.5rem,10vw,5rem)', fontWeight: 300, lineHeight: 1.05, color: '#e8e4db', marginBottom: 8, letterSpacing: '-0.01em' }}>
+          <span style={{ display: 'block' }}>ShunyaMarg</span>
+          <span style={{ display: 'block', fontStyle: 'italic', color: '#c9a05a', fontSize: '0.7em' }}>The Path of Dissolution</span>
         </h1>
 
-        <p className="relative z-10 font-serif text-[1.15rem] font-light text-[#b0aba2] leading-[1.8] max-w-[540px] mx-auto my-6">
-          A journey towards freedom from the noise of thoughts, the weight of possessions, and the burden of unnecessary words.
+        <p style={{ position: 'relative', zIndex: 1, fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1rem', fontWeight: 300, color: '#7a7670', lineHeight: 1.8, maxWidth: 480, margin: '16px auto 16px' }}>
+          When the restless activity of the mind begins to fade, we glimpse moments of pure stillness — a taste of Shunya, where energy and freshness flow naturally.
         </p>
 
-        <p className="relative z-10 font-serif italic text-[1rem] text-[#c9a05a] mb-12">सर्वं शून्यं — All is empty of separate self</p>
+        <p style={{ position: 'relative', zIndex: 1, fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: '0.95rem', color: '#c9a05a', letterSpacing: '0.06em', opacity: 0.8, marginBottom: 32 }}>
+          सर्वम् शून्यम् · शून्यम् सर्वम्
+        </p>
 
-        <div className="relative z-10 flex items-center gap-6">
-          <Link href="/deck" className="inline-flex items-center gap-2.5 px-8 py-3 bg-[#c9a05a] text-[#0e0d0b] text-[12px] tracking-[0.1em] uppercase rounded hover:bg-[#e2c07a]">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-            Explore the Deck
+        <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, width: '100%', maxWidth: 280 }}>
+          <Link href="/deck" style={styles.goldBtn}>
+            Enter Gyaan Kosh
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </Link>
-          <a href="#sangha" className="inline-flex items-center gap-2 text-[12px] tracking-[0.1em] uppercase text-[#b0aba2] no-underline hover:text-[#c9a05a]">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Join Sangha
+          <a href="#about" style={styles.ghostLink}>
+            Read the path
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M3 8l4 4 4-4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </a>
         </div>
       </section>
 
       {/* ABOUT */}
-      <section id="about" className="bg-[#f5f3ee] px-6 md:px-12 py-24 text-[#1a1916]">
-        <div className="max-w-[960px] mx-auto">
-          <div className="flex items-center gap-2.5 mb-4">
-            <span className="block w-5 h-[1px] bg-[#c9a05a] opacity-60" />
-            <span className="text-[10px] tracking-[0.22em] uppercase text-[#c9a05a]">About</span>
-          </div>
-          <h2 className="font-serif text-[clamp(2rem,4.5vw,3rem)] font-light mb-4">What is ShunyaMarg?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mt-14">
-            <div>
-              <p className="font-serif text-[1.1rem] font-light text-[#3a3632] leading-[1.9] mb-4">In a world drowning in information, ShunyaMarg offers something rare: the space to stop, to question, and to see through the illusions that keep us bound.</p>
-              <p className="font-serif text-[1.1rem] font-light text-[#3a3632] leading-[1.9] mb-4">Drawing from the Upanishads, TattvaBodh, and the mahāvākyas, each card presents a single insight in three voices: traditional, contemporary, and kathā.</p>
-              <div className="p-6 pl-8 border-l-2 border-[#c9a05a] bg-[#edeae3]">
-                <p className="font-serif italic text-[1.05rem]">"You are not what you think you are. The thinking itself is the veil."</p>
-              </div>
-            </div>
-            <div className="space-y-5 md:sticky md:top-20">
-              {[{t:"Three Voices",d:"Every teaching in Traditional, Contemporary, and Katha styles — so the truth reaches you wherever you are."},
-                {t:"No Belief Required",d:"Nothing asks for blind faith. Each teaching invites you to look and see for yourself."},
-                {t:"Free & Open",d:"All content is freely accessible. No paywalls, no subscriptions, no agendas."}
-              ].map((item,i)=>(
-                <div key={i} className="p-6 border border-[rgba(26,25,22,0.10)] rounded bg-white">
-                  <h4 className="font-serif text-[1.2rem] text-[#1a1916] mb-1">{item.t}</h4>
-                  <p className="text-[0.88rem] text-[#3a3632]">{item.d}</p>
-                </div>
-              ))}
+      <hr style={styles.divider} />
+      <section id="about" style={{ ...styles.section, background: '#f5f3ee', color: '#1a1916' }}>
+        <div style={styles.inner}>
+          <p style={{ ...styles.eyebrow, color: '#8a6530' }}>
+            <span style={styles.eyebrowLine} /> About ShunyaMarg
+          </p>
+          <h2 style={{ ...styles.sectionTitle, color: '#1a1916', marginBottom: 32 }}>The Zero Milestone</h2>
+          <div>
+            <p style={styles.bodyText}>Shunya Marg is a journey towards freedom — freedom from the noise of thoughts, the weight of possessions, and even the burden of unnecessary words. In meditation, when the restless activity of the mind begins to fade, we glimpse moments of pure stillness — a taste of Shunya, where energy and freshness flow naturally.</p>
+            <p style={styles.bodyText}>In life too, when we choose simplicity over excess, we lighten our burdens and discover space for clarity and joy. And often, silence itself becomes the deepest expression — when words fail to capture truth, when anger tempts us to speak harshly, or when desire makes us explain what we seek.</p>
+            <p style={styles.bodyText}>At its essence, Shunya Marg is the path towards the Zero Milestone — the point where journey and destination dissolve into the present moment. Whatever we seek in life is not at some distant future, but here and now, at Shunya.</p>
+            <p style={styles.bodyText}>In the Vedantic vision, even the triad of experiencer, experience, and experienced eventually dissolves. What remains when all three fall away is not emptiness, but pure Being — awareness itself, untouched by objects and unbound by divisions.</p>
+            <p style={styles.bodyText}>To walk the path of Shunya is not to lose life, but to discover its essence. It is the arrival where less becomes infinite, and zero reveals the whole.</p>
+            <div style={{ padding: '16px 20px', borderLeft: '2px solid #c9a05a', background: '#edeae3' }}>
+              <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', color: '#1a1916', fontSize: '1rem' }}>
+                सर्वम् शून्यम्, शून्यम् सर्वम् —<br />All is Shunya, Shunya is all.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA DECK */}
-      <section className="bg-[#1a1916] px-6 md:px-12 py-20 text-center">
-        <div className="max-w-[960px] mx-auto">
-          <h2 className="font-serif text-[clamp(2rem,4.5vw,3rem)] font-light text-[#e8e4db] mb-4">Begin Your Inquiry</h2>
-          <p className="text-[1rem] text-[#b0aba2] max-w-[500px] mx-auto mb-10">30+ cards spanning the Upanishads, TattvaBodh, and the Mahāvākyas. Each card speaks in three voices.</p>
-          <Link href="/deck" className="inline-flex items-center gap-2.5 px-8 py-3 bg-[#c9a05a] text-[#0e0d0b] text-[12px] tracking-[0.1em] uppercase rounded hover:bg-[#e2c07a]">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            Enter the Knowledge Base <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      {/* PILLARS */}
+      <hr style={styles.divider} />
+      <section id="pillars" style={{ ...styles.section, background: '#141310' }}>
+        <div style={styles.inner}>
+          <p style={styles.eyebrow}><span style={styles.eyebrowLine} /> Five pillars</p>
+          <h2 style={{ ...styles.sectionTitle, color: '#e8e4db', marginBottom: 12 }}>ShunyaMarg — The Path of Dissolution</h2>
+          <p style={{ fontSize: '0.9rem', color: '#7a7670', lineHeight: 1.85, marginBottom: 32 }}>Five dimensions of emptying — not as deprivation, but as liberation from the unnecessary weight we carry in mind, identity, desire, word, and moment.</p>
+          <div>
+            {PILLARS.map((p, i) => (
+              <div key={i} style={{
+                display: 'grid', gridTemplateColumns: '2rem 1fr', gap: 16,
+                padding: '20px 0', borderBottom: '1px solid rgba(201,160,90,0.15)',
+                borderTop: i === 0 ? '1px solid rgba(201,160,90,0.15)' : 'none'
+              }}>
+                <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.5rem', fontWeight: 300, color: '#7a5e2a', lineHeight: 1 }}>{p.num}</span>
+                <div>
+                  <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.15rem', fontWeight: 400, color: '#c9a05a', marginBottom: 2 }}>{p.sans}</div>
+                  <div style={{ fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#7a7670', marginBottom: 8 }}>{p.eng}</div>
+                  <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '0.9rem', fontWeight: 300, color: '#7a7670', lineHeight: 1.8 }}>{p.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <hr style={styles.divider} />
+      <section style={{ ...styles.section, background: '#1a1916', textAlign: 'center' }}>
+        <div style={{ maxWidth: 600, margin: '0 auto' }}>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(1.5rem,4vw,2.5rem)', fontWeight: 300, color: '#e8e4db', marginBottom: 12 }}>Gyaan Kosh — The Knowledge Base</h2>
+          <p style={{ fontSize: '0.9rem', color: '#7a7670', lineHeight: 1.85, marginBottom: 24 }}>Explore 30+ cards spanning the Upanishads and TattvaBodh, each presented in three voices — Traditional, Contemporary, and Katha.</p>
+          <Link href="/deck" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', background: '#c9a05a', color: '#0e0d0b', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: 2 }}>
+            Enter Gyaan Kosh
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </Link>
         </div>
       </section>
 
       {/* SANGHA */}
-      <section id="sangha" className="bg-[#0e0d0b] px-6 md:px-12 py-24">
-        <div className="max-w-[960px] mx-auto">
-          <h2 className="font-serif text-[clamp(2rem,4.5vw,3rem)] font-light mb-4">Join the Sangha</h2>
-          <p className="text-[1rem] text-[#b0aba2] max-w-[600px] mb-10">Share an insight or ask a question — the AI transforms it into a beautifully formatted card.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-8 border border-[rgba(201,160,90,0.15)] rounded bg-[#1a1916]">
-              <h3 className="font-serif text-[1.5rem] font-light text-[#c9a05a] mb-2">Contribute</h3>
-              <p className="text-[0.88rem] text-[#b0aba2] mb-6">Share a teaching, insight, or reflection. The AI generates three voices and suggests a topic.</p>
-              <Link href="/sangha" className="text-[12px] tracking-[0.1em] uppercase text-[#c9a05a] no-underline hover:text-[#e2c07a]">Submit an Insight →</Link>
+      <hr style={styles.divider} />
+      <section id="sangha" style={{ ...styles.section, background: '#0e0d0b' }}>
+        <div style={styles.inner}>
+          <p style={styles.eyebrow}><span style={styles.eyebrowLine} /> Sangha · Community</p>
+          <h2 style={{ ...styles.sectionTitle, color: '#e8e4db', marginBottom: 12 }}>Ask. Contribute. Connect.</h2>
+          <p style={{ fontSize: '0.9rem', color: '#7a7670', lineHeight: 1.85, marginBottom: 32 }}>Every sincere question is a step on the path. We read every message. We respond to those that carry genuine seeking.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
+            <div style={{ padding: 24, border: '1px solid rgba(201,160,90,0.15)', borderRadius: 2, background: '#1a1916' }}>
+              <h3 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.3rem', fontWeight: 300, color: '#c9a05a', marginBottom: 8 }}>Send a Query</h3>
+              <p style={{ fontSize: '0.85rem', color: '#7a7670', lineHeight: 1.7, marginBottom: 16 }}>A question that sits with you. Something from the cards, or something life has asked of you that you have not been able to answer.</p>
+              <Link href="/sangha" style={{ fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#c9a05a', textDecoration: 'none' }}>Send a Query →</Link>
             </div>
-            <div className="p-8 border border-[rgba(201,160,90,0.15)] rounded bg-[#1a1916]">
-              <h3 className="font-serif text-[1.5rem] font-light text-[#c9a05a] mb-2">Ask a Query</h3>
-              <p className="text-[0.88rem] text-[#b0aba2] mb-6">Stuck on a concept? Submit your question for a multi-perspective response.</p>
-              <Link href="/sangha" className="text-[12px] tracking-[0.1em] uppercase text-[#c9a05a] no-underline hover:text-[#e2c07a]">Ask a Question →</Link>
+            <div style={{ padding: 24, border: '1px solid rgba(201,160,90,0.15)', borderRadius: 2, background: '#1a1916' }}>
+              <h3 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.3rem', fontWeight: 300, color: '#c9a05a', marginBottom: 8 }}>Contribute a Card</h3>
+              <p style={{ fontSize: '0.85rem', color: '#7a7670', lineHeight: 1.7, marginBottom: 16 }}>If you have lived something this path touches, you can offer a card to the Gyaan Kosh. Submissions are reviewed before being woven in.</p>
+              <Link href="/sangha" style={{ fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#c9a05a', textDecoration: 'none' }}>Contribute →</Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-[rgba(201,160,90,0.15)] bg-[#0e0d0b]">
-        <div className="max-w-[960px] mx-auto px-6 md:px-12 py-14 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <footer style={{ borderTop: '1px solid rgba(201,160,90,0.15)', background: '#0e0d0b', padding: '40px 20px' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr', gap: 32 }}>
           <div>
-            <span className="font-serif text-[1.3rem] text-[#c9a05a] block mb-2">ShunyaMarg</span>
-            <p className="text-[0.85rem] text-[#b0aba2]">The Path of Dissolution.</p>
+            <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.2rem', color: '#c9a05a', display: 'block', marginBottom: 8 }}>ShunyaMarg</span>
+            <p style={{ fontSize: '0.85rem', color: '#7a7670', lineHeight: 1.65 }}>The path of dissolution. Walking towards the Zero Milestone — where journey and destination dissolve into the present moment.</p>
           </div>
           <div>
-            <h5 className="text-[10px] tracking-[0.16em] uppercase text-[#b0aba2] mb-4">Navigate</h5>
-            <Link href="/deck" className="block text-[13px] text-[#b0aba2] no-underline mb-2 hover:text-[#c9a05a]">Knowledge Base</Link>
-            <a href="#sangha" className="block text-[13px] text-[#b0aba2] no-underline hover:text-[#c9a05a]">Sangha</a>
+            <h5 style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#7a7670', marginBottom: 12 }}>Explore</h5>
+            <a href="#about" style={{ display: 'block', fontSize: 13, color: '#7a7670', textDecoration: 'none', marginBottom: 8 }}>The Path</a>
+            <a href="#pillars" style={{ display: 'block', fontSize: 13, color: '#7a7670', textDecoration: 'none', marginBottom: 8 }}>Five Pillars</a>
+            <Link href="/deck" style={{ display: 'block', fontSize: 13, color: '#7a7670', textDecoration: 'none', marginBottom: 8 }}>Gyaan Kosh</Link>
+            <a href="#sangha" style={{ display: 'block', fontSize: 13, color: '#7a7670', textDecoration: 'none' }}>Sangha</a>
           </div>
-          <div className="text-right">
-            <p className="font-serif italic text-[1rem] text-[#c9a05a]">तत्त्वमसि<br/>— That Thou Art</p>
+          <div>
+            <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: '1rem', color: '#c9a05a', lineHeight: 1.6 }}>सर्वम् शून्यम्<br />शून्यम् सर्वम्</p>
+            <p style={{ marginTop: 12, fontSize: '0.82rem', color: '#7a7670' }}>All is Shunya.<br />Shunya is all.</p>
           </div>
         </div>
-        <div className="border-t border-[rgba(201,160,90,0.15)] max-w-[960px] mx-auto px-6 md:px-12 py-5 flex justify-between">
-          <span className="text-[11px] text-[#b0aba2]">© {new Date().getFullYear()} ShunyaMarg</span>
-          <span className="text-[11px] text-[#b0aba2]">सर्वं शून्यं</span>
+        <div style={{ borderTop: '1px solid rgba(201,160,90,0.15)', maxWidth: 800, margin: '24px auto 0', padding: '16px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={{ fontSize: 11, color: '#7a7670', letterSpacing: '0.04em' }}>© {new Date().getFullYear()} ShunyaMarg · All content is an offering, not a claim.</span>
+          <span style={{ fontSize: 11, color: '#7a7670', letterSpacing: '0.04em' }}>contact@shunyamarg.org</span>
         </div>
       </footer>
     </div>
